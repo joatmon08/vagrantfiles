@@ -1,11 +1,9 @@
-joatmon08/dockerfiles
+joatmon08/vagrantfiles
 ==================
 
-This repository provides Dockerfiles for various use cases.
+This repository provides Vagrantfiles for various use cases.
 
-Each Dockerfile has a README that includes:
+Each Vagrantfile has a README that includes:
 
- * Version of the OS and Docker that it was built/tested against
- * Instructions for building the Docker image
-
-Many of these images are available on Docker Hub.
+ * Version of the Vagrant and Virtualbox that it was built/tested against
+ * Other notes on the Vagrant box it produces.

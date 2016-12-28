@@ -16,6 +16,8 @@ For more information about Vagrant usage, see
 [Vagrant's documentation](https://www.vagrantup.com/docs/)
 * Download Vagrantfile to a directory, navigate to inside
 the directory
+* Download the bootstrap shell script, the Vagrantfile
+needs it to provision Open vSwitch and other components.
 * Run the box.
 ```
 $ vagrant up
