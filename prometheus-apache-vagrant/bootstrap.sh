@@ -8,9 +8,13 @@ function isactive {
     systemctl enable "$@"
   fi
 }
-yum -y update >/dev/null 2>&1 && yum -y upgrade >/dev/null 2>&1
 
+echo "=== INSTALLING DEPENDENCIES ==="
+yum -y update >/dev/null 2>&1 && yum -y upgrade >/dev/null 2>&1
 yum -y install git >/dev/null 2>&1
+
+echo "=== GETTING IP ADDRESS ==="
+ip=`ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1`
 
 echo "=== INSTALLING APACHE ==="
 yum -y install httpd >/dev/null 2>&1
@@ -18,7 +22,7 @@ yum -y install httpd >/dev/null 2>&1
 echo "=== GENERATING APACHE CONFIG ==="
 echo $'<Location "/server-status">
     SetHandler server-status
-    Allow from 10.0.2.15
+    Allow from ${ip}
 </Location>'  >> /etc/httpd/conf/httpd.conf
 
 echo "=== STARTING APACHE ==="
