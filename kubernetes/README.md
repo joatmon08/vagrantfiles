@@ -3,6 +3,10 @@ This Vagrantfile stages a Kubernetes cluster on CentOS hosts for
 Virtualbox. Use this for testing purposes only. To start a cluster,
 use [kubeadm](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)
 
+**You will need to run the kubeadm command manually. This
+Vagrantfile does not automatically register the worker
+nodes to the head node!!**
+
 ## Dependency Information
 * Virtualbox
 * Vagrant
