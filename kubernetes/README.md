@@ -27,17 +27,28 @@ needs it to provision Open vSwitch and other components.
 * Create the boxes. The master node is labeled "head", the workers are labeled
 worker with an integer.
 * To SSH into the box, use `$ vagrant ssh <name>`.
-* Run kubeadm (or any other Kubernetes bootstrapping tool).
+* Run [kubeadm](https://kubernetes.io/docs/setup/independent/install-kubeadm/) (or any other Kubernetes bootstrapping tool).
 * To destroy the setup, use `$ vagrant destroy`.
 
-## Remote Usage
+## Vagrantfile Information
+The Vagrantfile stages the Virtualbox machine for Kubernetes - this means disabling swap space.
+See [this Github issue](https://github.com/kubernetes/kubernetes/issues/53533) 
+for more information. For the kube-router, the Vagrantfile also enables 
+bridged traffic to iptables.
+
+## Remotely Accessing Cluster
 Transfer the admin.conf from the head node to a local file.
 
 ```
-scp -P 2222 -i <key file> vagrant@127.0.0.1:/etc/kubernetes/admin.conf vagrant-kube.conf
+scp -P 2222 -i <key file> vagrant@127.0.0.1:/etc/kubernetes/admin.conf admin.conf
 ```
 
-When issuing kubectl on your local machine, be sure to specify the file.
+When issuing kubectl on your local machine, be sure to specify the file or set
+it as the KUBECONFIG.
 ```
-kubectl --kubeconfig ./vagrant-kube.conf get nodes
+kubectl --kubeconfig ./admin.conf get nodes
+
+## OR ##
+
+export KUBECONFIG=$(pwd)/admin.conf
 ```
