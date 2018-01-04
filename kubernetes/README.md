@@ -30,11 +30,13 @@ worker with an integer.
 * Run [kubeadm](https://kubernetes.io/docs/setup/independent/install-kubeadm/) (or any other Kubernetes bootstrapping tool).
 * To destroy the setup, use `$ vagrant destroy`.
 
-## Vagrantfile Information
-The Vagrantfile stages the Virtualbox machine for Kubernetes - this means disabling swap space.
-See [this Github issue](https://github.com/kubernetes/kubernetes/issues/53533) 
-for more information. For the kube-router, the Vagrantfile also enables 
-bridged traffic to iptables.
+## Caveats
+The Vagrantfile configures everything via the bootstrap.sh file. In the bootstrap, it stages the 
+Virtualbox machine for Kubernetes. This means:
+* disabling swap space. See [this Github issue](https://github.com/kubernetes/kubernetes/issues/53533) 
+for more information. 
+* bridged traffic to iptables is enabled for kube-router.
+* disabling SELinux, since it affects etcd on restart.
 
 ## Remotely Accessing Cluster
 Transfer the admin.conf from the head node to a local file.
