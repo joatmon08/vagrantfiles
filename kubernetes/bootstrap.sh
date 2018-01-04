@@ -27,3 +27,6 @@ sysctl --system
 
 swapoff -a
 sed -i '/swap/d' /etc/fstab
+
+setenforce 0
+sed -i '/SELINUX=enforcing/c\SELINUX=disabled' /etc/selinux/config
