@@ -5,7 +5,7 @@ NUM_WORKERS = 1
 
 Vagrant.configure('2') do |config|
   config.vm.define 'head' do |head|
-    head.vm.box = 'centos/7'
+    head.vm.box = 'joatmon08/k8s-kubeadm'
     head.vm.hostname = 'head'
 
     head.vm.network 'private_network', ip: '192.168.205.10'
@@ -14,13 +14,11 @@ Vagrant.configure('2') do |config|
       vb.memory = '8192'
       vb.cpus = 2
     end
-
-    head.vm.provision :shell, path: 'bootstrap.sh'
   end
 
   (1..NUM_WORKERS).each do |n|
     config.vm.define "worker#{n}" do |worker|
-      worker.vm.box = 'centos/7'
+      worker.vm.box = 'joatmon08/k8s-kubeadm'
       worker.vm.hostname = "worker#{n}"
 
       worker.vm.network 'private_network', ip: "192.168.205.1#{n}"
@@ -28,7 +26,6 @@ Vagrant.configure('2') do |config|
       worker.vm.provider 'virtualbox' do |vb|
         vb.memory = '8192'
       end
-      worker.vm.provision :shell, path: 'bootstrap.sh'
     end
   end
 end
