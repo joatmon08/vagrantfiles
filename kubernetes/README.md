@@ -31,10 +31,10 @@ worker with an integer.
 * To destroy the setup, use `$ vagrant destroy`.
 
 ## Caveats
-The Vagrantfile configures everything via the bootstrap.sh file. In the bootstrap, it stages the 
+The Vagrantfile configures everything via the bootstrap.sh file. In the bootstrap, it stages the
 Virtualbox machine for Kubernetes. This means:
-* disabling swap space. See [this Github issue](https://github.com/kubernetes/kubernetes/issues/53533) 
-for more information. 
+* disabling swap space. See [this Github issue](https://github.com/kubernetes/kubernetes/issues/53533)
+for more information.
 * bridged traffic to iptables is enabled for kube-router.
 * disabling SELinux, since it affects etcd on restart.
 
@@ -42,7 +42,7 @@ for more information.
 Transfer the admin.conf from the head node to a local file.
 
 ```
-scp -P 2222 -i <key file> vagrant@127.0.0.1:/etc/kubernetes/admin.conf admin.conf
+scp -P 2222 -i $(vagrant ssh-config | grep -m 1 IdentityFile | cut -d ' ' -f 4) vagrant@127.0.0.1:/etc/kubernetes/admin.conf .
 ```
 
 When issuing kubectl on your local machine, be sure to specify the file or set
