@@ -3,7 +3,8 @@ This Vagrantfile stages a Kubernetes cluster on CentOS hosts for
 Virtualbox. Use this for testing purposes only. To start a cluster,
 use [kubeadm](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)
 
-**You will need to run the kubeadm command manually. This
+**You will need to run the initialization
+scripts on each host manually. This
 Vagrantfile does not automatically register the worker
 nodes to the head node!!**
 
@@ -23,12 +24,40 @@ For more information about Vagrant usage, see
 the directory
 * Download the bootstrap shell script, the Vagrantfile
 needs it to provision Open vSwitch and other components.
-* Update the number of workers under NUM_WORKERS you want in the Vagrantfile.
-* Create the boxes. The master node is labeled "head", the workers are labeled
-worker with an integer.
-* To SSH into the box, use `$ vagrant ssh <name>`.
+* Update the number of workers under `NUM_WORKERS` you want in the Vagrantfile.
+* Create the boxes. The master node is labeled `head`, the workers are labeled
+`worker[0-n]`.
+  ```
+  $ vagrant up
+  ```
+* SSH into the head node.
+  ```
+  $ vagrant ssh head
+  ```
+* Run the following command on the head node to initialize via kubeadm,
+write out the token command, and set up kube-router networking.
+  ```
+  $ /tmp/init-head.sh (POD CIDR)
+  ```
+* Retrieve the token that was generated for worker registration.
+  ```
+  $ less /tmp/join.sh
+  kubeadm join --token REDACTED 192.168.205.10:6443 --discovery-token-ca-cert-hash REDACTED
+  ```
+* SSH into the worker nodes.
+  ```
+  $ /tmp/init-worker.sh "kubeadm join --token REDACTED 192.168.205.10:6443 --discovery-token-ca-cert-hash REDACTED
+    ...
+    This node has joined the cluster:
+    * Certificate signing request was sent to master and a response
+      was received.
+    * The Kubelet was informed of the new secure connection details.
+    Run 'kubectl get nodes' on the master to see this node join the cluster.
+  ```
+
+## Manually Install without Bootstrap Script
 * Run [kubeadm](https://kubernetes.io/docs/setup/independent/install-kubeadm/) (or any other Kubernetes bootstrapping tool).
-* To destroy the setup, use `$ vagrant destroy`.
+* Add Kubernetes networking of your choice.
 
 ## Caveats
 The Vagrantfile configures everything via the bootstrap.sh file. In the bootstrap, it stages the
