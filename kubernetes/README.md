@@ -55,9 +55,12 @@ write out the token command, and set up kube-router networking.
     Run 'kubectl get nodes' on the master to see this node join the cluster.
   ```
 
-## Manually Install without Bootstrap Script
+## Manually Install without Init Scripts
 * Run [kubeadm](https://kubernetes.io/docs/setup/independent/install-kubeadm/) (or any other Kubernetes bootstrapping tool).
 * Add Kubernetes networking of your choice.
+
+You can use the `boostrap.sh` file to install all dependencies on your
+own base box!
 
 ## Caveats
 The Vagrantfile configures everything via the bootstrap.sh file. In the bootstrap, it stages the
