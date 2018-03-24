@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -
 
 function isinstalled {
   if yum list installed "$@" >/dev/null 2>&1; then
@@ -29,7 +29,7 @@ fi
 
 echo $'[cloud7]
 name=CentOS Cloud7 Openstack
-baseurl=http://cbs.centos.org/repos/cloud7-openstack-common-release/x86_64/os/
+baseurl=https://cbs.centos.org/repos/cloud7-openstack-pike-release/x86_64/os/
 enabled=1
 gpgcheck=0'  > /etc/yum.repos.d/cloud7.repo
 

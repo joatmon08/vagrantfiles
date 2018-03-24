@@ -3,13 +3,13 @@ This Vagrantfile sets up Open vSwitch and Docker on a CentOS host for
 Virtualbox. Use this for testing purposes only.
 
 ## Dependency Information
-* Virtualbox 5.1.12r112440
-* Vagrant 1.9.1
+* Virtualbox 5.1.24
+* Vagrant 2.0.3
+* Ruby 2.5.0
+* Bundler 1.16.1
 
 ## Vagrant Box Information
-* CentOS 7 (kernel 3.10.0-514.2.2.el7.x86_64)
-* Docker 1.12.5
-* Open vSwitch 2.5.0
+See `test_box.rb` for versioning information.
 
 ## Usage
 For more information about Vagrant usage, see 
@@ -50,3 +50,22 @@ Bringing machine 'default' up with 'virtualbox' provider...
 ```
 * To SSH into the box, use `$ vagrant ssh`.
 * To destroy the box, use `$ vagrant destroy`.
+
+## Test
+There are tests under `test_box.rb` that check if the box conforms to
+versioning expected. They should be run separately.
+
+### Pre-Requisites
+* Ruby
+* Bundler
+* Inspec
+
+### Run
+1. Install the required gems.
+    ```
+    bundle install
+    ```
+2. Run Inspec to run the tests.
+    ```
+    inspec exec test_box.rb -t ssh://vagrant@127.0.0.1:2222 -i $(vagrant ssh-config | grep -m 1 IdentityFile | cut -d ' ' -f 4)
+    ```
