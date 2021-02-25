@@ -1,3 +1,5 @@
 .idea
 .vagrant
 *.box
+.bundle
+vendor
