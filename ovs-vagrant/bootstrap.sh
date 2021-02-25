@@ -15,59 +15,53 @@ function isactive {
     systemctl start "$@"
   fi
 }
-yum -y update && yum -y upgrade
+yum update -y && yum upgrade
+yum install -y subscription-manager
+yum install -y make gcc openssl-devel rpm-build yum-utils wget
 
 echo "=== INSTALLING OVS DEPENDENCIES ==="
-yum -y install make gcc openssl-devel autoconf automake \
-rpm-build redhat-rpm-config python-devel python-six \
-openssl-devel kernel-devel kernel-debug-devel libtool wget \
-net-tools
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+yum install -y centos-release-openstack-ussuri
+dnf config-manager --set-enabled powertools
 if [ $? -ne 0 ]; then
     echo "FAILED TO DOWNLOAD OVS DEPENDENCIES"
     exit 1
 fi
 
-echo $'[cloud7]
-name=CentOS Cloud7 Openstack
-baseurl=https://cbs.centos.org/repos/cloud7-openstack-pike-release/x86_64/os/
-enabled=1
-gpgcheck=0'  > /etc/yum.repos.d/cloud7.repo
+yum upgrade
 
 if isinstalled "openvswitch"; then
     echo "=== OVS IS ALREADY INSTALLED"
 else
     echo "=== INSTALLING OVS ==="
-    output=`yum -y install openvswitch`
+    output=`yum install -y libibverbs openvswitch`
     if [ $? -ne 0 ]; then
         echo "FAILED TO INSTALL OVS : ${output}"
         exit 1
     fi
 fi
 
+echo "=== TURNING ON OVS ==="
+isactive "openvswitch"
+
+systemctl enable --now openvswitch
+
 echo "=== CHECKING OVS VERSION ==="
-output=`ovs-vsctl --version`
+output=`ovs-vsctl show`
 if [ $? -ne 0 ]; then
     echo "NEED TO CHANGE PATH FOR OVS : ${output}"
     exit 1
 fi
 
-echo "=== TURNING ON OVS ==="
-isactive "openvswitch"
-
-systemctl enable openvswitch
-
-echo $'[dockerrepo]
-name=Docker Repository
-baseurl=https://yum.dockerproject.org/repo/main/centos/7/
-enabled=1
-gpgcheck=1
-gpgkey=https://yum.dockerproject.org/gpg' > /etc/yum.repos.d/docker.repo
+yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
 
 if isinstalled "docker"; then
     echo "=== DOCKER IS ALREADY INSTALLED"
 else
     echo "=== INSTALLING DOCKER ==="
-    output=`yum -y install docker-engine`
+    output=`yum install -y docker-ce docker-ce-cli containerd.io`
     if [ $? -ne 0 ]; then
         echo "FAILED TO INSTALL DOCKER : ${output}"
         exit 1

@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   # Set up base box as centos/7. Most be at least version 7
   # to use Docker.
-  config.vm.box = "centos/7"
+  config.vm.box = "centos/8"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
